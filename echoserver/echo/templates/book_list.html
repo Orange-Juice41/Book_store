@@ -1,0 +1,29 @@
+{% for book in books %}
+    <p>{{ book.title }} - {{ book.author }} - {{ book.price }} руб.</p>
+    {% if user.is_authenticated and user.role == 'admin' %}
+        <a href="{% url 'book_update' book.id %}">Edit</a>
+        <form method="post" action="{% url 'book_delete' book.id %}">
+            {% csrf_token %}
+            <button type="submit">Удалить</button>
+        </form>
+    {% endif %}
+{% endfor %}
+
+<div>
+    {% if books.has_previous %}
+        <a href="?page={{ books.previous_page_number }}">Предыдущая</a>
+    {% endif %}
+
+    Страница {{ books.number }} из {{ books.paginator.num_pages }}
+
+    {% if books.has_next %}
+        <a href="?page={{ books.next_page_number }}">следующая</a>
+    {% endif %}
+</div>
+
+{% if user.is_authenticated %}
+    <a href="{% url 'book_create' %}">Добавить новую книгу</a>
+    <a href="{% url 'logout' %}">Выйти из аккаунта</a>
+{% else %}
+    <a href="{% url 'login' %}">Войти в аккаунт</a>
+{% endif %}

@@ -1,7 +1,7 @@
 {% for book in books %}
     <p>{{ book.title }} - {{ book.author }} - {{ book.price }} руб.</p>
     {% if user.is_authenticated and user.role == 'admin' %}
-        <a href="{% url 'book_update' book.id %}">Edit</a>
+        <a href="{% url 'book_update' book.id %}">Изменить</a>
         <form method="post" action="{% url 'book_delete' book.id %}">
             {% csrf_token %}
             <button type="submit">Удалить</button>

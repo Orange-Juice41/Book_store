@@ -1,0 +1,128 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    position: relative; /* Для позиционирования псевдоэлемента */
+    overflow: hidden; /* Чтобы псевдоэлемент не выходил за пределы */
+}
+
+/* Псевдоэлемент для фонового изображения с размытием */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('img/lib_back.jpeg'); /* Относительный путь к изображению */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(7px); /* Эффект размытия (можно настроить значение) */
+    z-index: -1; /* Помещаем фон позади контента */
+}
+/* Стили для формы */
+form {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+}
+
+/* Стили для полей формы */
+p {
+    margin: 15px 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+/* Стили для кнопки сохранения */
+button[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Стили для стрелки назад */
+.back-arrow {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    color: #007bff;
+    text-decoration: none;
+    font-size: 24px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.back-arrow:hover {
+    background-color: #f0f0f0;
+    color: #0056b3;
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+    form {
+        padding: 20px;
+    }
+
+    button[type="submit"] {
+        padding: 10px 15px;
+    }
+
+    .back-arrow {
+        top: 15px;
+        left: 15px;
+        font-size: 20px;
+        width: 25px;
+        height: 25px;
+    }
+}

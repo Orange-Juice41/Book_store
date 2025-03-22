@@ -1,6 +1,20 @@
+
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавление книги</title>
+    <link rel="stylesheet" href="{% static 'book_form_style.css' %}">
+</head>
+<body>
+
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Сохранить</button>
+<a href="{% url 'book_list' %}" class="back-arrow">←</a>
 </form>
-<a href="{% url 'book_list' %}">Назад</a>
+
+</body>
+</html>

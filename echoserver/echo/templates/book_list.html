@@ -1,29 +1,48 @@
-{% for book in books %}
-    <p>{{ book.title }} - {{ book.author }} - {{ book.price }} руб.</p>
-    {% if user.is_authenticated and user.role == 'admin' %}
-        <a href="{% url 'book_update' book.id %}">Изменить</a>
-        <form method="post" action="{% url 'book_delete' book.id %}">
-            {% csrf_token %}
-            <button type="submit">Удалить</button>
-        </form>
-    {% endif %}
-{% endfor %}
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список книг</title>
+    <link rel="stylesheet" href="{% static 'book_list_style.css' %}">
+</head>
+<body>
+    <div class="container">
+        {% for book in books %}
+            <div class="book-item">
+                <p>{{ book.title }} - {{ book.author }} - {{ book.price }} руб.</p>
+                {% if user.is_authenticated and user.role == 'admin' %}
+                    <div class="book-actions">
+                        <a href="{% url 'book_update' book.id %}" class="edit-link">Изменить</a>
+                        <form method="post" action="{% url 'book_delete' book.id %}" class="delete-form">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-btn">Удалить</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
 
-<div>
-    {% if books.has_previous %}
-        <a href="?page={{ books.previous_page_number }}">Предыдущая</a>
-    {% endif %}
+        <div class="pagination">
+            {% if books.has_previous %}
+                <a href="?page={{ books.previous_page_number }}" class="page-link">Предыдущая</a>
+            {% endif %}
 
-    Страница {{ books.number }} из {{ books.paginator.num_pages }}
+            <span class="page-info">Страница {{ books.number }} из {{ books.paginator.num_pages }}</span>
 
-    {% if books.has_next %}
-        <a href="?page={{ books.next_page_number }}">следующая</a>
-    {% endif %}
-</div>
+            {% if books.has_next %}
+                <a href="?page={{ books.next_page_number }}" class="page-link">Следующая</a>
+            {% endif %}
+        </div>
 
-{% if user.is_authenticated %}
-    <a href="{% url 'book_create' %}">Добавить новую книгу</a>
-    <a href="{% url 'logout' %}">Выйти из аккаунта</a>
-{% else %}
-    <a href="{% url 'login' %}">Войти в аккаунт</a>
-{% endif %}
+        <div class="auth-links">
+            {% if user.is_authenticated %}
+                <a href="{% url 'book_create' %}" class="action-link">Добавить новую книгу</a>
+                <a href="{% url 'logout' %}" class="action-link logout">Выйти из аккаунта</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="action-link">Войти в аккаунт</a>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

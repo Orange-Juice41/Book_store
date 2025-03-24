@@ -1,0 +1,116 @@
+/* Стили для body */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    padding-top: 60px; /* Отступ для фиксированного верхнего бара */
+    background-color: #f4f4f4; /* Светлый фон */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Фоновое изображение с размытием */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('img/lib_back.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(7px);
+    z-index: -1;
+}
+
+/* Стили для контейнера */
+.container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 400px; /* Уменьшаем ширину для формы */
+    margin: 0 auto;
+}
+
+/* Стили для заголовка */
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+/* Стили для формы */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Расстояние между полями формы */
+}
+
+/* Стили для полей формы */
+.auth-form p {
+    margin: 0;
+}
+
+.auth-form label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-weight: bold;
+}
+
+.auth-form input[type="text"],
+.auth-form input[type="email"],
+.auth-form input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.auth-form input[type="text"]:focus,
+.auth-form input[type="email"]:focus,
+.auth-form input[type="password"]:focus {
+    outline: none;
+    box-shadow: 0 0 5px dimgrey;
+}
+
+/* Стили для кнопки "Зарегистрироваться" или "Войти" */
+.auth-form button[type="submit"] {
+    background-color: #d4a373;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.auth-form button[type="submit"]:hover {
+    background-color: #cc824f;
+}
+
+/* Стили для текста и ссылки внизу формы */
+.auth-link-text {
+    text-align: center;
+    margin-top: 15px;
+    color: #333;
+    font-size: 14px;
+}
+
+.auth-link-text a {
+    color: #C19A6B;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.auth-link-text a:hover {
+    color: #cc824f;
+}

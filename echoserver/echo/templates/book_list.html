@@ -7,6 +7,21 @@
     <link rel="stylesheet" href="{% static 'book_list_style.css' %}">
 </head>
 <body>
+    <!-- Новый верхний бар -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="{% url 'book_list' %}" class="navbar-brand">Book store</a>
+            <div class="navbar-auth">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'logout' %}" class="auth-link logout">Выйти из аккаунта</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="auth-link">Войти в аккаунт</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Основной контент -->
     <div class="container">
         {% for book in books %}
             <div class="book-item">
@@ -35,14 +50,12 @@
             {% endif %}
         </div>
 
-        <div class="auth-links">
-            {% if user.is_authenticated %}
+        <!-- Перенесли "Добавить новую книгу" в контейнер -->
+        {% if user.is_authenticated %}
+            <div class="action-links">
                 <a href="{% url 'book_create' %}" class="action-link">Добавить новую книгу</a>
-                <a href="{% url 'logout' %}" class="action-link logout">Выйти из аккаунта</a>
-            {% else %}
-                <a href="{% url 'login' %}" class="action-link">Войти в аккаунт</a>
-            {% endif %}
-        </div>
+            </div>
+        {% endif %}
     </div>
 </body>
 </html>

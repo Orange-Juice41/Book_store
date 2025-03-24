@@ -14,7 +14,15 @@ class BookForm(forms.ModelForm):
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField()
-
+    role = forms.ChoiceField(
+        label="Роль",
+        choices=[
+            ('user', 'Обычный пользователь'),
+            ('admin', 'Админ'),
+        ],
+        widget=forms.RadioSelect,  # Используем radio buttons
+        initial='user',  # Значение по умолчанию
+    )
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['username'].label = 'Имя пользователя'

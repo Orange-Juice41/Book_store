@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import book_list, book_create, book_update, book_delete, register_view, login_view, logout_view
+from .views import *
 
 
 urlpatterns = [
@@ -10,4 +10,10 @@ urlpatterns = [
     path('register/', register_view, name='register'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
+    path('profile/', profile, name='profile'),
+    path('add_to_cart/<int:book_id>/', add_to_cart, name='add_to_cart'),
+    path('cart/', cart_view, name='cart_view'),
+    path('remove_from_cart/<int:item_id>/', remove_from_cart, name='remove_from_cart'),
+    path('checkout/', checkout, name='checkout'),
+    path('orders/', order_history, name='order_history'),
 ]

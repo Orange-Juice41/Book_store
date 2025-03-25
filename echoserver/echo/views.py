@@ -1,11 +1,14 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
-from .models import Book
+from .models import Book, Cart, CartItem, Order, OrderItem
 from .forms import BookForm, RegisterForm, LoginForm
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, authenticate, logout, get_user_model
 from django.contrib.auth.decorators import login_required, user_passes_test
-
+from django.db.models import Sum, F, ExpressionWrapper, DecimalField
+from django.contrib import messages
+from django.core.exceptions import ValidationError
 # Create your views here.
+User = get_user_model()
 
 def register_view(request):
     if request.method == 'POST':
@@ -75,3 +78,98 @@ def book_delete(request, pk):
     if request.method == 'POST':
         book.delete()
         return redirect('book_list')
+
+@login_required
+def profile(request):
+    if request.method == 'POST':
+        user = request.user
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        role = request.POST.get('role')
+        if username != user.username and User.objects.filter(username=username).exists():
+            messages.error(request, 'Это имя пользователя уже занято')
+            return redirect('profile')
+        # Обновляем данные пользователя
+        try:
+            user.username = username
+            user.email = email
+            user.role = role
+            user.full_clean()
+            user.save()
+            messages.success(request, 'Профиль успешно обновлен')
+        except ValidationError as e:
+            messages.error(request, f'Ошибка при обновлении профиля: {str(e)}')
+        return redirect('profile')
+    return render(request, 'profile.html')
+
+
+@login_required
+def add_to_cart(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    cart_item, item_created = CartItem.objects.get_or_create(cart=cart, book=book)
+    if not item_created:
+        cart_item.quantity += 1
+        cart_item.save()
+    return redirect('book_list')
+
+
+# Просмотр корзины
+@login_required
+@login_required
+def cart_view(request):
+    # Получаем корзину пользователя или создаем новую, если она не существует
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    cart_items = CartItem.objects.filter(cart=cart)
+
+    # Вычисляем общую стоимость с помощью F-выражений
+    total = cart_items.aggregate(
+        total=Sum(
+            ExpressionWrapper(
+                F('book__price') * F('quantity'),
+                output_field=DecimalField()
+            )
+        )
+    )['total'] or 0
+    return render(request, 'cart.html', {'cart_items': cart_items, 'total': total})
+
+@login_required
+def remove_from_cart(request, item_id):
+    # Получаем корзину пользователя
+    cart = get_object_or_404(Cart, user=request.user)
+    # Получаем элемент корзины
+    cart_item = get_object_or_404(CartItem, id=item_id, cart=cart)
+    # Удаляем элемент
+    cart_item.delete()
+    messages.success(request, 'Книга удалена из корзины')
+    return redirect('cart_view')
+
+# Оформление заказа
+@login_required
+def checkout(request):
+    cart = get_object_or_404(Cart, user=request.user)
+    cart_items = CartItem.objects.filter(cart=cart)
+
+    if not cart_items:
+        return redirect('cart_view')
+
+    total = sum(item.book.price * item.quantity for item in cart_items)
+    order = Order.objects.create(user=request.user, total_price=total)
+
+    for item in cart_items:
+        OrderItem.objects.create(
+            order=order,
+            book=item.book,
+            quantity=item.quantity,
+            price=item.book.price
+        )
+
+    cart_items.delete()
+    return redirect('order_history')
+
+
+# История заказов
+@login_required
+def order_history(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'order_history.html', {'orders': orders})

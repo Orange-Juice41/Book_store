@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрация</title>
-    <link rel="stylesheet" href="{% static 'book_list_style.css' %}"> <!-- Для верхнего бара -->
-    <link rel="stylesheet" href="{% static 'auth_style.css' %}"> <!-- Для формы регистрации -->
+    <link rel="stylesheet" href="{% static 'navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'auth_style.css' %}">
 </head>
 <body>
     <!-- Верхний бар -->
     <nav class="navbar">
         <div class="navbar-container">
-            <a href="{% url 'book_list' %}" class="navbar-brand">Библиотека</a>
+            <a href="{% url 'book_list' %}" class="navbar-brand">Book store</a>
             <div class="navbar-auth">
             </div>
         </div>

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Добавление книги</title>
-    <link rel="stylesheet" href="{% static 'book_form_style.css' %}">
+    <title>Корзина</title>
+    <link rel="stylesheet" href="{% static 'cart_style.css' %}">
     <link rel="stylesheet" href="{% static 'navbar.css' %}">
 </head>
 <body>
@@ -23,12 +23,26 @@
             </div>
         </div>
     </nav>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Сохранить</button>
-    <a href="{% url 'book_list' %}" class="back-arrow">←</a>
-    </form>
 
+<div class="container">
+        <h2>Ваша корзина</h2>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% if cart_items %}
+            {% for item in cart_items %}
+                <div class="cart-item">
+                    <p>{{ item.book.title }} - {{ item.quantity }} шт. - {{ item.book.price }} руб.</p>
+                    <a href="{% url 'remove_from_cart' item.id %}" class="remove-btn">Удалить</a>
+                </div>
+            {% endfor %}
+            <p><strong>Итого:</strong> {{ total }} руб.</p>
+            <a href="{% url 'checkout' %}" class="checkout-btn">Оформить заказ</a>
+        {% else %}
+            <p>Ваша корзина пуста.</p>
+        {% endif %}
+    </div>
 </body>
 </html>

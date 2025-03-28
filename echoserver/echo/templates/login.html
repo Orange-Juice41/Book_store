@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вход в аккаунт</title>
-    <link rel="stylesheet" href="{% static 'navbar.css' %}"> <!-- Для верхнего бара -->
-    <link rel="stylesheet" href="{% static 'auth_style.css' %}"> <!-- Для формы входа -->
+    <link rel="stylesheet" href="{% static 'navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'auth_style.css' %}">
 </head>
 <body>
-    <!-- Верхний бар -->
     <nav class="navbar">
         <div class="navbar-container">
             <a href="{% url 'book_list' %}" class="navbar-brand">Book store</a>
@@ -17,7 +16,6 @@
         </div>
     </nav>
 
-    <!-- Основной контент -->
     <div class="container">
         <h2>Вход в аккаунт</h2>
         <form method="post" class="auth-form">

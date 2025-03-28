@@ -89,7 +89,6 @@ def profile(request):
         if username != user.username and User.objects.filter(username=username).exists():
             messages.error(request, 'Это имя пользователя уже занято')
             return redirect('profile')
-        # Обновляем данные пользователя
         try:
             user.username = username
             user.email = email
@@ -102,7 +101,6 @@ def profile(request):
         return redirect('profile')
     return render(request, 'profile.html')
 
-
 @login_required
 def add_to_cart(request, book_id):
     book = get_object_or_404(Book, id=book_id)
@@ -113,16 +111,10 @@ def add_to_cart(request, book_id):
         cart_item.save()
     return redirect('book_list')
 
-
-# Просмотр корзины
-@login_required
 @login_required
 def cart_view(request):
-    # Получаем корзину пользователя или создаем новую, если она не существует
     cart, created = Cart.objects.get_or_create(user=request.user)
     cart_items = CartItem.objects.filter(cart=cart)
-
-    # Вычисляем общую стоимость с помощью F-выражений
     total = cart_items.aggregate(
         total=Sum(
             ExpressionWrapper(
@@ -135,27 +127,20 @@ def cart_view(request):
 
 @login_required
 def remove_from_cart(request, item_id):
-    # Получаем корзину пользователя
     cart = get_object_or_404(Cart, user=request.user)
-    # Получаем элемент корзины
     cart_item = get_object_or_404(CartItem, id=item_id, cart=cart)
-    # Удаляем элемент
     cart_item.delete()
     messages.success(request, 'Книга удалена из корзины')
     return redirect('cart_view')
 
-# Оформление заказа
 @login_required
 def checkout(request):
     cart = get_object_or_404(Cart, user=request.user)
     cart_items = CartItem.objects.filter(cart=cart)
-
     if not cart_items:
         return redirect('cart_view')
-
     total = sum(item.book.price * item.quantity for item in cart_items)
     order = Order.objects.create(user=request.user, total_price=total)
-
     for item in cart_items:
         OrderItem.objects.create(
             order=order,
@@ -163,12 +148,9 @@ def checkout(request):
             quantity=item.quantity,
             price=item.book.price
         )
-
     cart_items.delete()
     return redirect('order_history')
 
-
-# История заказов
 @login_required
 def order_history(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')

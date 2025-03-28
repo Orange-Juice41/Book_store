@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{% static 'book_list_style.css' %}">
 </head>
 <body>
-    <!-- Новый верхний бар -->
+
     <nav class="navbar">
         <div class="navbar-container">
             <a href="{% url 'book_list' %}" class="navbar-brand">Book store</a>
@@ -25,7 +25,6 @@
         </div>
     </nav>
 
-    <!-- Основной контент -->
     <div class="container">
         {% for book in books %}
             <div class="book-item">
@@ -57,7 +56,6 @@
             {% endif %}
         </div>
 
-        <!-- Перенесли "Добавить новую книгу" в контейнер -->
         {% if user.is_authenticated %}
             <div class="action-links">
                 <a href="{% url 'book_create' %}" class="action-link">Добавить новую книгу</a>

@@ -1,6 +1,8 @@
 from django import forms
 from .models import Book, User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import get_user_model
+from argon2 import PasswordHasher, exceptions
 
 class BookForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -12,7 +14,10 @@ class BookForm(forms.ModelForm):
         model = Book
         fields = ['title', 'author', 'price']
 
-class RegisterForm(UserCreationForm):
+
+class RegisterForm(forms.ModelForm):
+    password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Подтверждение пароля', widget=forms.PasswordInput)
     email = forms.EmailField()
     role = forms.ChoiceField(
         label="Роль",
@@ -20,28 +25,65 @@ class RegisterForm(UserCreationForm):
             ('user', 'Обычный пользователь'),
             ('admin', 'Админ'),
         ],
-        widget=forms.RadioSelect,  # Используем radio buttons
-        initial='user',  # Значение по умолчанию
+        widget=forms.RadioSelect,
+        initial='user',
     )
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['username'].label = 'Имя пользователя'
-        self.fields['password1'].label = 'Пароль'
-        self.fields['password2'].label = 'Подтверждение пароля'
-        self.fields['role'].label = 'Роль'
-        self.fields['username'].help_text = None
-        self.fields['password1'].help_text = None
-        self.fields['password2'].help_text = None
 
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2', 'role']
 
-class LoginForm(AuthenticationForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['username'].label = 'Имя пользователя'
-        self.fields['password'].label = 'Пароль'
-    class Meta:
-        model = User
-        fields = ['username', 'password']
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get('password1')
+        password2 = cleaned_data.get('password2')
+
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Пароли не совпадают")
+        return cleaned_data
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        raw_password = self.cleaned_data['password1']
+        ph = PasswordHasher()  # Создаем объект PasswordHasher
+        hashed_password = ph.hash(raw_password)  # Хешируем пароль с помощью Argon2
+        user.password = hashed_password  # Сохраняем хешированный пароль
+        if commit:
+            user.save()
+        return user
+
+
+# class LoginForm(AuthenticationForm):
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self.fields['username'].label = 'Имя пользователя'
+#         self.fields['password'].label = 'Пароль'
+#     class Meta:
+#         model = User
+#         fields = ['username', 'password']
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField(label='Имя пользователя')
+    password = forms.CharField(label='Пароль', widget=forms.PasswordInput)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get('username')
+        password = cleaned_data.get('password')
+
+        if username and password:
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                raise forms.ValidationError("Неверное имя пользователя или пароль")
+            ph = PasswordHasher()
+            try:
+                ph.verify(user.password, password)  # Проверяем, совпадает ли пароль
+            except exceptions.VerifyMismatchError:
+                raise forms.ValidationError("Неверное имя пользователя или пароль")
+            cleaned_data['user'] = user
+        return cleaned_data
+
+    def get_user(self):
+        return self.cleaned_data.get('user')

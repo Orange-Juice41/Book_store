@@ -32,7 +32,6 @@ def login_view(request):
         form = LoginForm()
     return render(request, 'login.html', {'form': form})
 
-
 def logout_view(request):
     logout(request)
     return redirect('book_list')
@@ -130,7 +129,6 @@ def remove_from_cart(request, item_id):
     cart = get_object_or_404(Cart, user=request.user)
     cart_item = get_object_or_404(CartItem, id=item_id, cart=cart)
     cart_item.delete()
-    messages.success(request, 'Книга удалена из корзины')
     return redirect('cart_view')
 
 @login_required

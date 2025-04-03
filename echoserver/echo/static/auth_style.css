@@ -8,9 +8,9 @@
     max-width: 500px;
     position: relative;
     z-index: 1;
+    border: 2px solid #d2b48c;
 }
 
-/* Стили для заголовка */
 h2 {
     text-align: center;
     color: #333;
@@ -18,14 +18,12 @@ h2 {
     font-size: 24px;
 }
 
-/* Стили для формы */
 .auth-form {
     display: flex;
     flex-direction: column;
-    gap: 15px; /* Расстояние между полями формы */
+    gap: 15px;
 }
 
-/* Стили для полей формы */
 .auth-form p {
     margin: 0;
 }
@@ -56,7 +54,6 @@ h2 {
     box-shadow: 0 0 5px #C19A6B;
 }
 
-/* Стили для кнопки "Зарегистрироваться" или "Войти" */
 .auth-form button[type="submit"] {
     background-color: #d4a373;
     color: white;
@@ -72,7 +69,6 @@ h2 {
     background-color: #cc824f;
 }
 
-/* Стили для текста и ссылки внизу формы */
 .auth-link-text {
     text-align: center;
     margin-top: 15px;

@@ -1,4 +1,3 @@
-/* Стили для формы */
 form {
     background-color: white;
     padding: 30px;
@@ -9,7 +8,6 @@ form {
     position: relative;
 }
 
-/* Стили для полей формы */
 p {
     margin: 15px 0;
 }
@@ -41,7 +39,6 @@ textarea:focus {
     box-shadow: 0 0 5px #C19A6B;
 }
 
-/* Стили для кнопки сохранения */
 button[type="submit"] {
     background-color: #C19A6B;
     color: white;
@@ -59,7 +56,6 @@ button[type="submit"]:hover {
     background-color: #cc824f;
 }
 
-/* Стили для стрелки назад */
 .back-arrow {
     position: absolute;
     top: 10px;

@@ -20,10 +20,6 @@ h2 {
     border-bottom: 1px solid #eee;
 }
 
-.cart-item:last-child {
-    border-bottom: none;
-}
-
 p {
     margin: 10px 0;
     color: #333;
@@ -32,11 +28,12 @@ p {
 .remove-btn {
     color: #ff4040;
     text-decoration: none;
-    font-size: 0.9em;
+    font-size: 14px;
+    transition: color 0.3s ease;
 }
 
 .remove-btn:hover {
-    text-decoration: underline;
+    color: #a30808;
 }
 
 .checkout-btn {

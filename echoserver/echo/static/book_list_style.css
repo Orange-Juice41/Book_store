@@ -8,9 +8,9 @@
     max-width: 900px;
     position: relative;
     z-index: 1;
+    border: 2px solid #d2b48c;
 }
 
-/* Стили для элемента книги */
 .book-item {
     border-bottom: 1px solid #ddd;
     padding: 15px 0;
@@ -23,8 +23,6 @@
     border-bottom: none;
 }
 
-
-/* Стили для действий с книгой (Изменить/Удалить) */
 .book-actions {
     display: flex;
     gap: 10px;

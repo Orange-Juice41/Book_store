@@ -26,11 +26,6 @@
 
 <div class="container">
         <h2>Ваша корзина</h2>
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
         {% if cart_items %}
             {% for item in cart_items %}
                 <div class="cart-item">

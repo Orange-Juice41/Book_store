@@ -7,6 +7,7 @@
     max-width: 900px;
     position: relative;
     z-index: 1;
+    border: 2px solid #d2b48c;
 }
 
 h2 {
@@ -69,21 +70,4 @@ p {
     margin: 10px 0;
     color: #333;
     text-align: center;
-}
-
-.alert {
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    text-align: center;
-}
-
-.alert-success {
-    background-color: #d4edda;
-    color: #155724;
-}
-
-.alert-error {
-    background-color: #f8d7da;
-    color: #721c24;
 }

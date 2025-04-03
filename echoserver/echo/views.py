@@ -4,9 +4,12 @@ from .models import Book, Cart, CartItem, Order, OrderItem
 from .forms import BookForm, RegisterForm, LoginForm
 from django.contrib.auth import login, authenticate, logout, get_user_model
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Sum, F, ExpressionWrapper, DecimalField
 from django.contrib import messages
 from django.core.exceptions import ValidationError
+from django.http import JsonResponse
+import json
 # Create your views here.
 User = get_user_model()
 
@@ -40,11 +43,24 @@ def is_admin(user):
     return user.is_authenticated and user.role == 'admin'
 
 def book_list(request):
+    title_filter = request.GET.get('title', '')
+    author_filter = request.GET.get('author', '')
+
     books = Book.objects.all()
+    if title_filter:
+        books = books.filter(title__icontains=title_filter)
+    if author_filter:
+        books = books.filter(author__icontains=author_filter)
+
     paginator = Paginator(books, 5)
-    page = request.GET.get('page')
-    books = paginator.get_page(page)
-    return render(request, 'book_list.html', {'books': books})
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'book_list.html', {
+        'books': page_obj,
+        'title_filter': title_filter,
+        'author_filter': author_filter
+    })
 
 @login_required
 def book_create(request):
@@ -153,3 +169,12 @@ def checkout(request):
 def order_history(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'order_history.html', {'orders': orders})
+
+@csrf_exempt
+def check_username(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        username = data.get('username', '')
+        exists = User.objects.filter(username=username).exists()
+        return JsonResponse({'exists': exists})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
